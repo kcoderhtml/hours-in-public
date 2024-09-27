@@ -1,5 +1,5 @@
 ---
-import '../styles/tailwind.css';
+import '../styles/base.css';
 ---
 
 <html lang="en">
@@ -10,7 +10,9 @@ import '../styles/tailwind.css';
 		<meta name="generator" content={Astro.generator} />
 		<title>Astro</title>
 	</head>
-	<body>
-		<h1>Astro</h1>
+	<body class="bg-background dark:bg-background-dark text-text-primary dark:text-text-dark-primary p-4 pt-10 flex flex-col min-h-screen max-w-screen mx-auto justify-center">
+		<main class="mt-10 grow flex justify-center w-full">
+			<h1 class="text-4xl font-semibold antialiased mb-1 leading-snug">Astro</h1>
+		</main>
 	</body>
 </html>
