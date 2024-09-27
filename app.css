@@ -1,0 +1,196 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Base definition */
+h1, h2, h3, h4, h5, h6 {
+    font-family: Superclarendon, 'Bookman Old Style', 'URW Bookman', 'URW Bookman L', 'Georgia Pro', Georgia, serif;;
+}
+
+body {
+    font-family: ui-rounded, 'Hiragino Maru Gothic ProN', Quicksand, Comfortaa, Manjari, 'Arial Rounded MT', 'Arial Rounded MT Bold', Calibri, source-sans-pro, sans-serif;
+}
+
+[v-cloak] {
+    display: none;
+}
+
+/* Additional classes */
+
+.bg-gray-850 {
+    background-color: #242b3a;
+}
+
+.hover\:bg-gray-850:hover {
+    --bg-opacity: 1;
+    background-color: #242b3a;
+}
+
+.text-xsi {
+    font-size: 0.75rem !important;
+    line-height: 1rem !important;
+}
+
+.text-xxs {
+    font-size: 0.65rem !important;
+}
+
+.mt-14 {
+    margin-top: 3.5rem;
+}
+
+.text-7xl {
+    font-size: 4.5rem;
+    line-height: 1.1;
+}
+
+.text-8xl {
+    font-size: 5rem;
+    line-height: 1.1;
+}
+
+.imp\:cursor-not-allowed {
+    @apply cursor-not-allowed !important;
+}
+
+/* Custom classes */
+.h1 {
+    @apply font-semibold text-3xl text-white m-0;
+}
+
+.h1-subcaption {
+    @apply text-gray-600 text-sm;
+}
+
+.btn-default {
+    @apply py-2 px-4 font-semibold rounded bg-accent-primary dark:bg-accent-dark-primary hover:bg-accent-secondary hover:dark:bg-accent-dark-secondary hover:bg-gray-850 text-sm;
+}
+
+.btn-disabled {
+    @apply py-2 px-4 font-semibold rounded bg-gray-800 text-gray-600 text-sm;
+}
+
+.btn-primary {
+    @apply py-2 px-4 font-semibold rounded bg-primary hover:bg-primary-dark text-sm;
+}
+
+.btn-danger {
+    @apply py-2 px-4 font-semibold rounded bg-red-600 hover:bg-red-700 text-sm;
+}
+
+.btn-small {
+    @apply py-1 px-2;
+}
+
+.input-default {
+    @apply appearance-none bg-secondary-primary dark:bg-secondary-dark-primary focus:bg-secondary-secondary focus:dark:bg-secondary-dark-secondary text-text-primary dark:text-text-dark-primary placeholder-current outline-none rounded w-full py-2 px-4;
+}
+
+.select-default {
+    @apply input-default cursor-pointer;
+}
+
+.menu-item {
+    @apply flex items-center text-sm font-semibold space-x-2 rounded hover:bg-accent-primary hover:dark:bg-accent-dark-primary py-2 px-4 cursor-pointer;
+}
+
+.submenu-item {
+    @apply hover:bg-gray-800 rounded p-1 text-right;
+}
+
+.chip {
+    @apply text-xs bg-gray-850 rounded-full py-1 px-2 font-semibold inline-block mb-1;
+}
+
+.link {
+    @apply font-semibold text-text-secondary dark:text-text-dark-secondary hover:text-accent-primary ;
+}
+
+.newsbox {
+    @apply px-4 py-2 border-2 bg-gray-850 rounded-md text-white border-green-700;
+}
+
+.newsbox-default {
+    @apply border-green-700;
+}
+
+.newsbox-warning {
+    @apply border-yellow-600;
+}
+
+.newsbox-danger {
+    @apply border-red-700;
+}
+
+.leaderboard-default {
+    @apply border-gray-700;
+}
+
+.leaderboard-self {
+    margin-left: -10px;
+    margin-right: -10px;
+    padding-left: calc(1rem + 10px);
+    padding-right: calc(1rem + 10px);
+    @apply border-green-700 bg-gray-800;
+}
+
+.text-gold {
+    color: #daa520;
+}
+
+.border-3 {
+    border-width: 3px;
+}
+
+::-webkit-calendar-picker-indicator {
+    filter: invert(1);
+    cursor: pointer;
+}
+
+.max-available {
+    max-width: -moz-available;
+    max-width: -webkit-fill-available;
+    max-width: fill-available;
+}
+
+.projects-item a {
+    @apply flex flex-col align-middle bg-secondary-secondary dark:bg-secondary-dark-secondary hover:bg-secondary-primary hover:dark:bg-secondary-dark-primary py-2 px-4 rounded-md shadow-md hover:shadow-lg;
+}
+
+.projects-item .color-fading {
+    @apply absolute w-full h-full rounded-md;
+    pointer-events: none;
+}
+
+.disabled {
+    pointer-events: none;
+    cursor: default;
+    opacity: 75%;
+}
+
+.entity-filter-control {
+    width: 180px;
+    @apply text-text-secondary dark:text-text-dark-secondary text-sm;
+}
+
+.entity-filter-control label {
+    @apply font-semibold capitalize align-text-bottom;
+}
+
+.entity-filter-control select {
+    @apply truncate py-1.5 px-2.5;
+}
+
+/*
+#summary-page svg rect {
+    cursor: help;
+}
+*/
+
+.wi-min {
+    width: min-content !important;
+}
+
+.link {
+    @apply font-semibold text-text-primary dark:text-text-dark-primary hover:text-accent-secondary hover:dark:hover:text-accent-primary;
+}
