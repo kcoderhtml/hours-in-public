@@ -3,14 +3,46 @@
 @tailwind utilities;
 
 /* Base definition */
-h1, h2, h3, h4, h5, h6 {
-    font-family: Superclarendon, 'Bookman Old Style', 'URW Bookman', 'URW Bookman L', 'Georgia Pro', Georgia, serif;;
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: Superclarendon, "Bookman Old Style", "URW Bookman",
+    "URW Bookman L", "Georgia Pro", Georgia, serif;
 }
 
 body {
-    font-family: ui-rounded, 'Hiragino Maru Gothic ProN', Quicksand, Comfortaa, Manjari, 'Arial Rounded MT', 'Arial Rounded MT Bold', Calibri, source-sans-pro, sans-serif;
+  font-family: ui-rounded, "Hiragino Maru Gothic ProN", Quicksand, Comfortaa,
+    Manjari, "Arial Rounded MT", "Arial Rounded MT Bold", Calibri,
+    source-sans-pro, sans-serif;
 }
 
-.link {
-    @apply font-semibold text-text-primary dark:text-text-dark-primary hover:text-accent-secondary hover:dark:hover:text-accent-primary;
+h1 {
+  @apply text-4xl font-semibold antialiased mb-1 leading-snug;
+}
+
+h2 {
+  @apply text-3xl font-semibold antialiased mb-1 leading-snug;
+}
+
+h3 {
+  @apply text-2xl font-semibold antialiased mb-1 leading-snug;
+}
+
+h4 {
+  @apply text-xl font-semibold antialiased mb-1 leading-snug;
+}
+
+h5 {
+  @apply text-lg font-semibold antialiased mb-1 leading-snug;
+}
+
+[data-icon] {
+  @apply inline;
+}
+
+a {
+  @apply font-semibold text-text-primary dark:text-text-dark-primary hover:text-accent-secondary hover:dark:hover:text-accent-primary;
 }
