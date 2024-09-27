@@ -1,0 +1,39 @@
+---
+import '../styles/base.css';
+import { Icon } from 'astro-icon/components'
+
+import { version } from '../../package.json';
+const url = Astro.url.host
+---
+
+<footer
+    class="flex justify-between w-full text-text-tertiary dark:text-text-dark-tertiary items-center gap-x-4"
+>
+    <div class="text-xs font-mono font-semibold">
+        { version } @ { url }
+    </div>
+    <div class="font-semibold text-sm text-center">
+        Made with 
+        <Icon name="mdi:heart"/> by
+        <a
+            href="https://github.com/kcoderhtml"
+            class="text-text-secondary dark:text-text-dark-secondary hover:text-accent-secondary hover:dark:hover:text-accent-primary"
+            >Kieran Klukas</a
+        >
+        as
+        <a
+            href="https://github.com/kcoderhtml/hackatime"
+            class="text-text-secondary dark:text-text-dark-secondary hover:text-accent-secondary hover:dark:hover:text-accent-primary"
+            >open-source</a
+        >
+        software.
+    </div>
+    <div class="text-sm">
+        <a
+            href="imprint"
+            class="text-text-secondary dark:text-text-dark-secondary hover:text-accent-secondary hover:dark:hover:text-accent-primary"
+        >
+            &copy; 2024 under <a href="https://github.com/kcoderhtml/hours-in-public/blob/master/LICENSE.md">AGPL 3.0</a>
+        </a>
+    </div>
+</footer>

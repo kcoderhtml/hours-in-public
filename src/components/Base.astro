@@ -1,0 +1,25 @@
+---
+import '../styles/base.css';
+import Footer from '../components/Footer.astro';
+---
+
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+		<meta name="viewport" content="width=device-width" />
+		<meta name="generator" content={Astro.generator} />
+		<title>10 Hours in Public</title>
+	</head>
+	<body class="bg-background dark:bg-background-dark text-text-primary dark:text-text-dark-primary p-4 pt-10 flex flex-col min-h-screen max-w-screen mx-auto justify-center text-center">
+		<header>
+			<h1>10 Hours in Public</h1>
+		</header>
+
+		<main class="mt-10 grow flex flex-col self-center text-xl">
+            <slot />
+		</main>
+
+		<Footer/>
+	</body>
+</html>
