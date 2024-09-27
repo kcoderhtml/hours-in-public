@@ -1,5 +1,9 @@
 ---
 import '../styles/base.css';
+import { Icon } from 'astro-icon/components'
+
+import { version } from '../../package.json';
+const url = Astro.url.host
 ---
 
 <html lang="en">
@@ -8,11 +12,49 @@ import '../styles/base.css';
 		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 		<meta name="viewport" content="width=device-width" />
 		<meta name="generator" content={Astro.generator} />
-		<title>Astro</title>
+		<title>10 Hours in Public</title>
 	</head>
-	<body class="bg-background dark:bg-background-dark text-text-primary dark:text-text-dark-primary p-4 pt-10 flex flex-col min-h-screen max-w-screen mx-auto justify-center">
-		<main class="mt-10 grow flex justify-center w-full">
-			<h1 class="text-4xl font-semibold antialiased mb-1 leading-snug">Astro</h1>
+	<body class="bg-background dark:bg-background-dark text-text-primary dark:text-text-dark-primary p-4 pt-10 flex flex-col min-h-screen max-w-screen mx-auto justify-center text-center">
+		<head>
+			<h1>10 Hours in Public</h1>
+		</head>
+
+		<main class="mt-10 grow flex flex-col self-center text-xl">
+			<h2 class="text-3xl font-semibold antialiased mb-1 leading-snug">Welcome to the 10 Hours in Public submission form 🎉</h2>
+			<p>You did it! Whether you did 10 hours or 1 hour you set aside some time over the last 10 days to code!</p>
 		</main>
+
+		<footer
+    class="flex justify-between w-full text-text-tertiary dark:text-text-dark-tertiary items-center gap-x-4"
+>
+    <div class="text-xs font-mono font-semibold">
+        { version } @ { url }
+    </div>
+    <div class="font-semibold text-sm text-center">
+        Made with 
+		<Icon name="mdi:heart"/> by
+        <a
+            href="https://github.com/kcoderhtml"
+            class="text-text-secondary dark:text-text-dark-secondary hover:text-accent-secondary hover:dark:hover:text-accent-primary"
+            >Kieran Klukas</a
+        >
+        as
+        <a
+            href="https://github.com/kcoderhtml/hackatime"
+            class="text-text-secondary dark:text-text-dark-secondary hover:text-accent-secondary hover:dark:hover:text-accent-primary"
+            >open-source</a
+        >
+        software.
+    </div>
+    <div class="text-sm">
+		<a
+			href="imprint"
+			class="text-text-secondary dark:text-text-dark-secondary hover:text-accent-secondary hover:dark:hover:text-accent-primary"
+		>
+			&copy; 2024 under <a href="https://github.com/kcoderhtml/hours-in-public/blob/master/LICENSE.md">AGPL 3.0</a>
+		</a>
+    </div>
+</footer>
+
 	</body>
 </html>
