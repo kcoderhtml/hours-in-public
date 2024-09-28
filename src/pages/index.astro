@@ -2,15 +2,83 @@
 import '../styles/base.css';
 import Base from '../components/Base.astro';
 import { Icon } from 'astro-icon/components'
+
+import { createSession, getSession, gracePeriod } from "../utils/auth/auth";
+import type { Session } from "../utils/auth/auth";
+
+let session: Session | null = null;
+const sessionCookie = Astro.cookies.get("session")?.value;
+if (sessionCookie !== undefined) {
+	session = getSession(sessionCookie);
+}
+
+let errorMsg: string | null = Astro.url.searchParams.get("error");
+
+if (
+	Astro.request.method === "GET" &&
+	Astro.url.searchParams.get("code") !== null &&
+	!session
+) {
+	try {
+		const code = Astro.url.searchParams.get("code");
+		if (!code) {
+			throw new Error("No code provided");
+		}
+
+		const jwtToken = await createSession(code, Astro.url.origin);
+
+		if (!jwtToken) {
+			throw new Error("Failed to create session");
+		}
+
+		// reload the page to remove the code from the URL but keep state
+		return new Response(null, {
+			status: 303,
+			headers: {
+				location: Astro.url.pathname + "?checkSession=true",
+				"Set-Cookie": `session=${jwtToken.token}; Path=/; HttpOnly; Secure; SameSite=Strict; Expires=${new Date(jwtToken.expires + gracePeriod).toUTCString()}`
+			},
+		});
+	} catch (error) {
+		if (error instanceof Error) {
+			console.error(error);
+			errorMsg = error.message;
+		}
+	}
+}
+
 ---
 
 <Base>
 	<h2 class="text-3xl font-semibold antialiased mb-1 mt-24 leading-snug">Welcome to the 10 Hours in Public submission form 🎉</h2>
 	<p>You did it! Whether you did 10 hours or 1 hour you set aside some time over the last 10 days to code!</p>
 
-	<p>Please sign in below with your Slack Acount</p>
+	{
+		errorMsg && (
+			<p class="text-red-500 mt-10">Error: {errorMsg}</p>
+		)
+	}
 
-	<div class="flex flex-col items-center justify-center grow mb-56">
-		<a href="https://slack.com/openid/connect/authorize?scope=openid%20email%20profile&amp;response_type=code&amp;redirect_uri=http%3A%2F%2Flocalhost%3A4321&amp;client_id=2210535565.7794926235186" class="border-solid border-2 rounded-md border-accent-primary w-fit p-2 self-center mt-6"><Icon name="simple-icons:slack" class="-translate-y-[0.1rem]"/> Sign in with Slack</a>
-	</div>
+	{
+		(session || Astro.url.searchParams.get("checkSession")) && (
+			<section class="flex flex-col items-center justify-center grow mb-56">
+				<a
+					class="border-solid border-2 rounded-md border-primary hover:text-primary hover:dark:text-primary w-fit p-2 self-center mt-6"
+					href="/submit"
+				>
+					Submit some Projects!
+				</a>
+			</section>
+		)
+
+	}
+
+	{
+		!session && !Astro.url.searchParams.get("checkSession") && (
+			<section class="flex flex-col items-center justify-center grow mb-56">
+				<p>Please sign in below with your Slack Acount</p>
+				<a href=`https://slack.com/openid/connect/authorize?scope=openid%20email%20profile&response_type=code&redirect_uri=${Astro.url.origin}&client_id=${process.env.SLACK_CLIENT_ID}` class="border-solid border-2 rounded-md border-accent-primary w-fit p-2 self-center mt-6"><Icon name="simple-icons:slack" class="-translate-y-[0.1rem]"/> Sign in with Slack</a>
+			</section>
+		)
+	}
 </Base>
