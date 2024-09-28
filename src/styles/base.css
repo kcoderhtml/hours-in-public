@@ -44,5 +44,5 @@ h5 {
 }
 
 a {
-  @apply font-semibold text-text-primary dark:text-text-dark-primary hover:text-accent-secondary hover:dark:hover:text-accent-primary;
+  @apply font-semibold text-text-primary dark:text-text-dark-primary hover:text-accent-secondary dark:hover:text-accent-primary;
 }
