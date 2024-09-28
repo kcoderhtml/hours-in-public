@@ -46,3 +46,31 @@ h5 {
 a {
   @apply font-semibold text-text-primary dark:text-text-dark-primary hover:text-accent-secondary dark:hover:text-accent-primary;
 }
+
+.btn-default {
+  @apply py-2 px-4 font-semibold rounded bg-accent-primary dark:bg-accent-dark-primary hover:bg-accent-secondary hover:dark:bg-accent-dark-secondary text-sm;
+}
+
+.btn-disabled {
+  @apply py-2 px-4 font-semibold rounded bg-gray-800 text-gray-600 text-sm;
+}
+
+.btn-primary {
+  @apply py-2 px-4 font-semibold rounded bg-primary hover:bg-primary-dark text-sm;
+}
+
+.btn-danger {
+  @apply py-2 px-4 font-semibold rounded bg-red-600 hover:bg-red-700 text-sm;
+}
+
+.input-default {
+  @apply appearance-none bg-secondary-primary dark:bg-secondary-dark-primary focus:bg-secondary-secondary focus:dark:bg-secondary-dark-secondary text-text-primary dark:text-text-dark-primary placeholder-current outline-none rounded w-full py-2 px-4;
+}
+
+.select-default {
+  @apply input-default cursor-pointer;
+}
+
+.inline-code {
+  @apply bg-secondary-secondary dark:bg-secondary-dark-secondary px-1 rounded-lg italic
+}

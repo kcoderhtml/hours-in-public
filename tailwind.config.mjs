@@ -54,4 +54,13 @@ export default {
     },
   },
   content: ["./src/**/*.{astro,html,js,jsx,md,mdx,svelte,ts,tsx,vue}"],
+  safelist: [
+    "btn-default",
+    "btn-disabled",
+    "btn-primary",
+    "btn-danger",
+    "input-default",
+    "select-default",
+    "inline-code",
+  ],
 };
