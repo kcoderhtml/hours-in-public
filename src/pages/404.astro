@@ -1,0 +1,26 @@
+---
+import Base from "../components/Base.astro";
+---
+
+<Base noHeader={true}>
+    <section class="flex flex-col grow justify-center">
+        <p>I fear that you have gone into unknown teritories and have encounted the dreaded 404</p>
+
+        <p id="redirect" class="mt-5">Redirecting you back to known teritory in 5</p>
+    </section>
+</Base>
+
+<script>
+	const link = document.getElementById("redirect") as HTMLParagraphElement;
+
+	// count down to redirect
+	let count = 5;
+	const interval = setInterval(() => {
+		count--;
+		link.innerText = `Redirecting you back to known teritory in ${count}`;
+		if (count === 0) {
+			clearInterval(interval);
+			window.location.href = "/";
+		}
+	}, 1000);
+</script>
