@@ -69,7 +69,7 @@ function formatTime(seconds: number) {
 
     { (!hackatimeToken || hackatimeToken == "" || errorMsg) && (
         <form method="post" class="flex flex-row">
-            <input type="text" name="token" class="input-default m-2" required value={hackatimeToken} />
+            <input type="text" name="token" class="input-default m-2" required value={hackatimeToken} placeholder="Enter you hackatime token here" />
             <button type="submit" class="btn-primary m-2">Submit</button>
         </form>
     )}
