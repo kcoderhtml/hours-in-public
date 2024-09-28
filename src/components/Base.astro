@@ -1,6 +1,26 @@
 ---
 import '../styles/base.css';
 import Footer from '../components/Footer.astro';
+import { Icon } from 'astro-icon/components';
+
+import { getSession, type Session } from "../utils/auth/auth";
+
+let session: Session | null = null;
+const sessionCookie = Astro.cookies.get("session")?.value;
+
+if (sessionCookie) {
+	session = getSession(sessionCookie);
+}
+
+interface Props {
+	title?: string;
+	noHeader?: boolean;
+	noFooter?: boolean;
+}
+
+const { title, noHeader, noFooter } = Astro.props;
+
+const loggedIn = Astro.url.searchParams.get("checkSession");
 ---
 
 <html lang="en">
@@ -9,17 +29,31 @@ import Footer from '../components/Footer.astro';
 		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 		<meta name="viewport" content="width=device-width" />
 		<meta name="generator" content={Astro.generator} />
-		<title>10 Hours in Public</title>
+		<title>{ title || "10 Hours in Public" }</title>
 	</head>
-	<body class="bg-background dark:bg-background-dark text-text-primary dark:text-text-dark-primary p-4 pt-10 flex flex-col min-h-screen max-w-screen mx-auto justify-center text-center">
-		<header>
-			<h1>10 Hours in Public</h1>
-		</header>
+	<body class="bg-background dark:bg-background-dark text-text-primary dark:text-text-dark-primary p-4 pt-4 flex flex-col min-h-screen max-w-screen mx-auto justify-center text-center">
+		{ !noHeader && (
+			<header class="mb-16">
+				<nav class="rounded-lg m-2 p-3">
+					<div class="flex items-center justify-between max-w-full text-xl">
+						<h1><a href="/">10 Hours in Public</a></h1>
+						<div class="flex items-center space-x-4">
+							{
+								session || loggedIn
+									? <a href="/logout">Logout</a>
+									: <a href=`https://slack.com/openid/connect/authorize?scope=openid%20email%20profile&response_type=code&redirect_uri=${Astro.url.origin}&client_id=${process.env.SLACK_CLIENT_ID}` class="mb-3"><Icon name="simple-icons:slack" class="-translate-y-[0.1rem]"/> Sign in with Slack</a>
+
+							}
+						</div>
+					</div>
+				</nav>
+			</header>
+		)}
 
 		<main class="mt-10 grow flex flex-col self-center text-xl">
             <slot />
 		</main>
 
-		<Footer/>
+		{ !noFooter && (<Footer/>)}
 	</body>
 </html>
