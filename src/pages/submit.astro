@@ -85,8 +85,8 @@ if (sessionCookie !== undefined) {
         <p>Thank you for submitting your token! It is: <span class="inline-code">{hackatimeToken}</span></p>
 
         <div id="projects">
-            <h4 class="mt-10">You have {summary.projects.length} projects with a combined total of <span class="inline-code">{formatTime(summary.projects.reduce((total, project) => total + project.total, 0))}</span></h4>
-            <div class="grid grid-cols-3 gap-4 mt-5">
+            <h4 class="mt-10">You have {summary.projects.length} projects with a combined total of <span class="inline-code" data-hackatime-id={summary.user_id} id="hackatime_token">{formatTime(summary.projects.reduce((total, project) => total + project.total, 0))}</span></h4>
+            <div class="grid grid-cols-3 gap-4 mt-5" id="projects-drag-from">
                 {summary.projects.map((project, index) => (
                     <div data-swapy-slot={index} class="min-h-24 border-secondary-tertiary dark:border-secondary-dark-tertiary border-solid border-4 rounded-lg">
                         <div class="bg-secondary-primary dark:bg-secondary-dark-primary rounded-lg shadow-md p-4" data-swapy-item={index}>
@@ -99,17 +99,33 @@ if (sessionCookie !== undefined) {
                 ))}
             </div>
 
-            <h4 class="mt-10">Please drag all the projects that are apart of this repo into the box below</h4>
+            <div id="project-form">
+                <h4 class="mt-10">Please choose a project repo and projects</h4>
+                <p>Drag the projects related to the repo into the boxes below and then hit submit</p>
 
-            <div class="bg-secondary-secondary dark:bg-secondary-dark-secondary grow m-2 border-primary border-solid border-4 rounded-md grid grid-cols-2 gap-4">
-                <form style="grid-column: span 2" class="flex flex-row">
-                    <input type="url" name="repo" id="repo" class="input-default border-secondary-tertiary dark:border-secondary-dark-tertiary border-solid rounded-md border-4 m-2"/>
-                    <input type="submit" value="submit" class="btn-primary m-2" id="project-submit"/>
-                </form>
+                <div class="bg-secondary-secondary dark:bg-secondary-dark-secondary grow m-2 border-primary border-solid border-4 rounded-md grid grid-cols-3 gap-4">
+                    <form style="grid-column: span 3" class="flex flex-row">
+                        <input type="url" name="repo" id="repo" class="input-default border-secondary-tertiary dark:border-secondary-dark-tertiary border-solid rounded-md border-4 m-2" required pattern="https?://.+"/>
+                        <input type="submit" value="submit" class="btn-primary m-2" id="project-submit"/>
+                        <h2 class="flex items-center p-2 text-secondary-primary dark:text-secondary-dark-primary" id="submission-count">0</h2>
+                        <span class="hidden text-primary dark:text-primary"></span>
+                    </form>
 
-                {summary.projects.map((project, index) => (
-                    <div data-swapy-slot={"project-" + index} class="m-2 min-h-24 border-secondary-tertiary dark:border-secondary-dark-tertiary border-solid border-4 rounded-lg"></div>
-                ))}
+                    {summary.projects.map((project, index) => (
+                        <div data-swapy-slot={"project-" + index} class="m-2 min-h-[6.5rem] border-secondary-tertiary dark:border-secondary-dark-tertiary border-solid border-4 rounded-lg" id={"project-submission-"+index}></div>
+                    ))}
+                </div>
+            </div>
+
+            <div id="project-view" class="hidden">
+                <div class="bg-secondary-secondary dark:bg-secondary-dark-secondary grow m-2 border-primary border-solid border-4 rounded-md p-4">
+                <h3>Submitted Projects:</h3>
+                <ul id="project-list-final">
+                </ul>
+
+                <p>Are you ready to submit?</p>
+                <button type="submit" class="btn-primary m-2" id="final-submit">Submit</button>
+            </div>
             </div>
         </div>
     )}
@@ -126,4 +142,130 @@ if (sessionCookie !== undefined) {
     })
 
     swapy.enable(true)
+</script>
+
+<script>
+    let submittedProjects: {repo: string, projects: {name: string, time: string}[]}[] = []
+    const projectSubmitButton = document.querySelector('#project-submit') as HTMLButtonElement;
+    const repo = document.querySelector('#repo') as HTMLInputElement;
+    const submissionCount = document.querySelector('#submission-count') as HTMLHeadingElement;
+    const projectView = document.querySelector('#project-view') as HTMLDivElement;
+    const projectsDragFrom = document.querySelector('#projects-drag-from') as HTMLDivElement;
+    const projectForm = document.querySelector('#project-form') as HTMLDivElement;
+    const projectListFinal = document.querySelector('#project-list-final') as HTMLUListElement
+
+    const hackatimeToken = document.querySelector('#hackatime_token') as HTMLElement;
+
+    // listen for submit events
+    projectSubmitButton.addEventListener('click', async (event) => {
+        event.preventDefault();
+
+        // get all the projects that are in the swappy div
+        const projects = Array.from(document.querySelectorAll('[id^="project-submission-"]')).filter(project => project.children.length > 0) as HTMLDivElement[];
+
+        if (projects.length === 0 || repo.value == "" || !repo.validity) {
+            let message = ""
+            if (projects.length === 0) {
+                message += "Please drag some projects into the boxes\n\n"
+            }
+            if (repo.value == "") {
+                message += "Please fill in the repo"
+            } else if (!repo.validity.valid) {
+                message += "Please fill in a valid url begining with http or https"
+            }
+            
+            alert(message);
+            return;
+        }
+
+        // get the project name and the amount of time on each project
+        const projectData = Array.from(projects).map((project) => {
+            const name = project.querySelector('h3')!.innerText;
+            const time = project.querySelector('p')!.innerText;
+
+            return {
+                name,
+                time
+            }
+        });
+
+        submittedProjects.push({
+            repo: repo.value,
+            projects: projectData
+        });
+
+        // add an item to the prejects view div without un hidding it
+        projectListFinal.innerHTML = submittedProjects.map((project, index) => 
+            `<li class="bg-secondary-tertiary dark:bg-secondary-dark-tertiary m-2 border-primary border-solid border-2 rounded-md p-4">
+                <p><strong>Repo:</strong> <a href="${project.repo}" target="_blank">${project.repo}</a></p>
+                <p><strong>Projects:</strong></p>
+                <ul>
+                ${project.projects.map((p) => `
+                    <li>${p.name} - ${p.time}</li>
+                `).join('')}
+                </ul>
+            </li>
+            `).join('');
+
+
+        // animate the div sliding off screen quickly
+        projects.forEach((project) => {
+            project.style.transition = 'transform 0.5s';
+            project.style.transform = 'translateX(100%)';
+        });
+
+        // clear the repo input
+        repo.value = "";
+    
+        // clear the project submission divs
+        projects.forEach((project) => {
+            project.remove();
+        });
+
+        // hide move everything back and then show
+        setTimeout(() => {
+            projects.forEach((project) => {
+                project.style.transition = 'transform 0s';
+                project.style.transform = 'translateX(0)';
+            });
+        }, 500);
+
+        console.log(submittedProjects)
+
+        // add the text-primary class to the counter and update it
+        submissionCount.classList.add('text-primary', 'dark:text-primary');
+        submissionCount.innerText = submittedProjects.length.toString();
+
+        const projectsLeft = projectsDragFrom.children.length - submittedProjects.reduce((total, project) => total + project.projects.length, 0);
+
+        if (projectsLeft == 0) {
+            projectView.classList.remove('hidden');
+            projectForm.classList.add('hidden');
+            projectsDragFrom.classList.add('hidden');
+        }
+    });
+
+    const finalSubmit = document.querySelector('#final-submit') as HTMLButtonElement;
+
+    finalSubmit.addEventListener('click', async (event) => {
+        event.preventDefault();
+
+        const response = await fetch('/api/submit', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                submittedProjects,
+                hackatimeUser: hackatimeToken.dataset.hackatimeId
+            })
+        });
+
+        if (response.ok) {
+            alert('Successfully submitted your projects!');
+            window.location.href = '/done';
+        } else {
+            alert('Failed to submit your projects');
+        }
+    });
 </script>
