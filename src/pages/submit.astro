@@ -30,11 +30,15 @@ export interface Category {
     total: number;
 }
 
-const summary: Summary = await fetch("https://waka.hackclub.com/api/summary?from=2024-09-19&to=2024-09-29", {
-    headers: {
-        Authorization: `Bearer ${btoa(hackatimeToken!)}`
-    }
-}).then(res => res.json());
+let summary: Summary | null = null;
+
+if (hackatimeToken && hackatimeToken !== "") {
+    summary = await fetch("https://waka.hackclub.com/api/summary?from=2024-09-19&to=2024-09-29", {
+        headers: {
+            Authorization: `Bearer ${btoa(hackatimeToken!)}`
+        }
+    }).then(res => res.json());
+}
 
 function formatTime(seconds: number) {
     const hours = Math.floor(seconds / 3600);
@@ -58,7 +62,7 @@ function formatTime(seconds: number) {
         </form>
     )}
 
-    { (hackatimeToken && hackatimeToken != "") && (
+    { (hackatimeToken && hackatimeToken != "" && summary) && (
         <p>Thank you for submitting your token! It is: <span class="inline-code">{hackatimeToken}</span></p>
         
         <p>You have {summary.projects.length} projects with a combined total of <span class="inline-code">{formatTime(summary.projects.reduce((total, project) => total + project.total, 0))}</span></p>
