@@ -83,18 +83,47 @@ if (sessionCookie !== undefined) {
 
     { (hackatimeToken && hackatimeToken != "" && summary) && (
         <p>Thank you for submitting your token! It is: <span class="inline-code">{hackatimeToken}</span></p>
-        
-        <p>You have {summary.projects.length} projects with a combined total of <span class="inline-code">{formatTime(summary.projects.reduce((total, project) => total + project.total, 0))}</span></p>
-        <div class="grid grid-cols-3 gap-4 mt-5">
-            {summary.projects.map((project, index) => (
-                <div class="bg-secondary-primary dark:bg-secondary-dark-primary rounded-lg shadow-md p-4">
-                    <h3 class="text-xl font-bold">{project.key}</h3>
-                    <p class="text-text-secondary dark:text-text-dark-secondary">
-                        {formatTime(project.total)}
-                    </p>
-                </div>
-            ))}
+
+        <div id="projects">
+            <h4 class="mt-10">You have {summary.projects.length} projects with a combined total of <span class="inline-code">{formatTime(summary.projects.reduce((total, project) => total + project.total, 0))}</span></h4>
+            <div class="grid grid-cols-3 gap-4 mt-5">
+                {summary.projects.map((project, index) => (
+                    <div data-swapy-slot={index} class="min-h-24 border-secondary-tertiary dark:border-secondary-dark-tertiary border-solid border-4 rounded-lg">
+                        <div class="bg-secondary-primary dark:bg-secondary-dark-primary rounded-lg shadow-md p-4" data-swapy-item={index}>
+                            <h3 class="text-xl font-bold">{project.key}</h3>
+                            <p class="text-text-secondary dark:text-text-dark-secondary">
+                                {formatTime(project.total)}
+                            </p>
+                        </div>
+                    </div>
+                ))}
+            </div>
+
+            <h4 class="mt-10">Please drag all the projects that are apart of this repo into the box below</h4>
+
+            <div class="bg-secondary-secondary dark:bg-secondary-dark-secondary grow m-2 border-primary border-solid border-4 rounded-md grid grid-cols-2 gap-4">
+                <form style="grid-column: span 2" class="flex flex-row">
+                    <input type="url" name="repo" id="repo" class="input-default border-secondary-tertiary dark:border-secondary-dark-tertiary border-solid rounded-md border-4 m-2"/>
+                    <input type="submit" value="submit" class="btn-primary m-2" id="project-submit"/>
+                </form>
+
+                {summary.projects.map((project, index) => (
+                    <div data-swapy-slot={"project-" + index} class="m-2 min-h-24 border-secondary-tertiary dark:border-secondary-dark-tertiary border-solid border-4 rounded-lg"></div>
+                ))}
+            </div>
         </div>
     )}
 
 </Base>
+
+<script>
+    import { createSwapy } from 'swapy'
+
+    const container = document.querySelector('#projects')
+
+    const swapy = createSwapy(container, {
+        animation: 'dynamic' // or spring or none
+    })
+
+    swapy.enable(true)
+</script>
