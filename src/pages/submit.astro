@@ -105,7 +105,7 @@ if (sessionCookie !== undefined) {
 
                 <div class="bg-secondary-secondary dark:bg-secondary-dark-secondary grow m-2 border-primary border-solid border-4 rounded-md grid grid-cols-3 gap-4">
                     <form style="grid-column: span 3" class="flex flex-row">
-                        <input type="url" name="repo" id="repo" class="input-default border-secondary-tertiary dark:border-secondary-dark-tertiary border-solid rounded-md border-4 m-2" required pattern="https?://.+"/>
+                        <input type="url" name="repo" id="repo" placeholder="Enter your repo url" class="input-default border-secondary-tertiary dark:border-secondary-dark-tertiary border-solid rounded-md border-4 m-2" required pattern="https?://.+"/>
                         <input type="submit" value="submit" class="btn-primary m-2" id="project-submit"/>
                         <h2 class="flex items-center p-2 text-secondary-primary dark:text-secondary-dark-primary" id="submission-count">0</h2>
                         <span class="hidden text-primary dark:text-primary"></span>
@@ -230,10 +230,9 @@ if (sessionCookie !== undefined) {
             });
         }, 500);
 
-        console.log(submittedProjects)
-
         // add the text-primary class to the counter and update it
-        submissionCount.classList.add('text-primary', 'dark:text-primary');
+        submissionCount.classList.add('text-primary')
+        submissionCount.classList.remove('text-secondary-primary', 'dark:text-secondary-dark-primary');
         submissionCount.innerText = submittedProjects.length.toString();
 
         const projectsLeft = projectsDragFrom.children.length - submittedProjects.reduce((total, project) => total + project.projects.length, 0);
