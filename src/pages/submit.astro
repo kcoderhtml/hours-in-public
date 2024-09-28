@@ -31,13 +31,21 @@ export interface Category {
 }
 
 let summary: Summary | null = null;
+let errorMsg: string | null = null;
 
 if (hackatimeToken && hackatimeToken !== "") {
     summary = await fetch("https://waka.hackclub.com/api/summary?from=2024-09-19&to=2024-09-29", {
         headers: {
             Authorization: `Bearer ${btoa(hackatimeToken!)}`
         }
-    }).then(res => res.json());
+    }).then(res => {
+        if (res.status === 401) {
+            throw new Error("Unauthorized; check if your token is correct");
+        }
+        return res.json();
+    }).catch(error => {
+        errorMsg = error.message;
+    });
 }
 
 function formatTime(seconds: number) {
@@ -53,11 +61,15 @@ function formatTime(seconds: number) {
 <Base>
     <p>Hi!</p>
 
-    { (!hackatimeToken || hackatimeToken == "") && (
-        <p>Can you please enter your wakapi token?</p>
+    {
+		errorMsg && (
+			<p class="text-red-500">{errorMsg}</p>
+		)
+	}
 
+    { (!hackatimeToken || hackatimeToken == "" || errorMsg) && (
         <form method="post" class="flex flex-row">
-            <input type="text" name="token" class="input-default m-2" required />
+            <input type="text" name="token" class="input-default m-2" required value={hackatimeToken} />
             <button type="submit" class="btn-primary m-2">Submit</button>
         </form>
     )}
