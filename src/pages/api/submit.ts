@@ -3,39 +3,7 @@ import type { APIRoute } from "astro";
 import { getSession, type Session } from "../../utils/auth/auth";
 
 import { AirtableTs } from "airtable-ts";
-import type { Item, Table } from "airtable-ts";
-
-export interface PrizeMap extends Item {
-  id: string;
-  name: string;
-  slackID: string;
-  repoLink: string;
-  projectsId: string;
-  projectHours: string;
-  hackatimeUserid: string;
-}
-
-export const TablePrizeMap: Table<PrizeMap> = {
-  name: "Prize Map",
-  baseId: "appUpK8vBRXvkdFai",
-  tableId: "tblY3Tp99L3XKDokW",
-  mappings: {
-    name: "fldfBGUwetXFGtAum",
-    slackID: "fld0kv7ajtpvefHKc",
-    repoLink: "fldwHQYbLLp8mWCN3",
-    projectsId: "fldaw8gMBtCkbVrcK",
-    projectHours: "fldo9xlH5TKHxKiAm",
-    hackatimeUserid: "fld9BMhrAbSOoV23B",
-  },
-  schema: {
-    name: "string",
-    slackID: "string",
-    repoLink: "string",
-    projectsId: "string",
-    projectHours: "string",
-    hackatimeUserid: "string",
-  },
-};
+import { ProjectDockTable } from "./airtableTypes";
 
 const db = new AirtableTs({ apiKey: process.env.AIRTABLE_API_KEY });
 
@@ -63,12 +31,12 @@ export const POST: APIRoute = async ({ request }) => {
   } else {
     for (const { repo, projects } of data.submittedProjects) {
       for (const { name, time } of projects) {
-        await db.insert(TablePrizeMap, {
+        await db.insert(ProjectDockTable, {
           name: session?.profile.fullname,
           slackID: session?.profile.id,
           repoLink: repo,
           projectsId: name,
-          projectHours: time,
+          projectHoursReadable: time,
           hackatimeUserid: data.hackatimeUser,
         });
       }
