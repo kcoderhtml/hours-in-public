@@ -5,10 +5,12 @@ import { Icon } from 'astro-icon/components'
 ---
 
 <Base>
-	<h2 class="text-3xl font-semibold antialiased mb-1 leading-snug">Welcome to the 10 Hours in Public submission form 🎉</h2>
+	<h2 class="text-3xl font-semibold antialiased mb-1 mt-24 leading-snug">Welcome to the 10 Hours in Public submission form 🎉</h2>
 	<p>You did it! Whether you did 10 hours or 1 hour you set aside some time over the last 10 days to code!</p>
 
 	<p>Please sign in below with your Slack Acount</p>
 
-	<a href="https://slack.com/openid/connect/authorize?scope=openid%20email%20profile&amp;response_type=code&amp;redirect_uri=http%3A%2F%2Flocalhost%3A4321&amp;client_id=2210535565.7794926235186"><Icon name="simple-icons:slack" class="-translate-y-[0.1rem]"/> Sign in with Slack</a>
+	<div class="flex flex-col items-center justify-center grow mb-56">
+		<a href="https://slack.com/openid/connect/authorize?scope=openid%20email%20profile&amp;response_type=code&amp;redirect_uri=http%3A%2F%2Flocalhost%3A4321&amp;client_id=2210535565.7794926235186" class="border-solid border-2 rounded-md border-accent-primary w-fit p-2 self-center mt-6"><Icon name="simple-icons:slack" class="-translate-y-[0.1rem]"/> Sign in with Slack</a>
+	</div>
 </Base>
