@@ -13,7 +13,7 @@ export default defineConfig({
     tailwind({ applyBaseStyles: false }),
     icon({
       include: {
-        mdi: ["heart"],
+        mdi: ["heart", "file-document-box"],
       },
     }),
   ],
