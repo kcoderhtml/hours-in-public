@@ -19,7 +19,7 @@ export const POST: APIRoute = async ({ request }) => {
   const data: {
     submittedProjects: {
       repo: string;
-      projects: { name: string; time: string }[];
+      projects: { name: string; time: string; seconds: number }[];
     }[];
     hackatimeUser: string;
   } = await request.json();
@@ -30,13 +30,14 @@ export const POST: APIRoute = async ({ request }) => {
     return new Response("No data provided", { status: 400 });
   } else {
     for (const { repo, projects } of data.submittedProjects) {
-      for (const { name, time } of projects) {
+      for (const { name, time, seconds } of projects) {
         await db.insert(ProjectDockTable, {
           name: session?.profile.fullname,
           slackID: session?.profile.id,
           repoLink: repo,
           projectsId: name,
           projectHoursReadable: time,
+          projectSeconds: seconds,
           hackatimeUserid: data.hackatimeUser,
         });
       }

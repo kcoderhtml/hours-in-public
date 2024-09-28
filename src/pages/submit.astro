@@ -91,7 +91,7 @@ if (sessionCookie !== undefined) {
                     <div data-swapy-slot={index} class="min-h-24 border-secondary-tertiary dark:border-secondary-dark-tertiary border-solid border-4 rounded-lg">
                         <div class="bg-secondary-primary dark:bg-secondary-dark-primary rounded-lg shadow-md p-4" data-swapy-item={index}>
                             <h3 class="text-xl font-bold">{project.key}</h3>
-                            <p class="text-text-secondary dark:text-text-dark-secondary">
+                            <p class="text-text-secondary dark:text-text-dark-secondary" data-seconds={project.total}>
                                 {formatTime(project.total)}
                             </p>
                         </div>
@@ -145,7 +145,7 @@ if (sessionCookie !== undefined) {
 </script>
 
 <script>
-    let submittedProjects: {repo: string, projects: {name: string, time: string}[]}[] = []
+    let submittedProjects: {repo: string, projects: {name: string, time: string, seconds: number}[]}[] = []
     const projectSubmitButton = document.querySelector('#project-submit') as HTMLButtonElement;
     const repo = document.querySelector('#repo') as HTMLInputElement;
     const submissionCount = document.querySelector('#submission-count') as HTMLHeadingElement;
@@ -182,10 +182,12 @@ if (sessionCookie !== undefined) {
         const projectData = Array.from(projects).map((project) => {
             const name = project.querySelector('h3')!.innerText;
             const time = project.querySelector('p')!.innerText;
+            const seconds = parseInt(project.querySelector('p')!.dataset.seconds!);
 
             return {
                 name,
-                time
+                time,
+                seconds
             }
         });
 
@@ -248,6 +250,11 @@ if (sessionCookie !== undefined) {
 
     finalSubmit.addEventListener('click', async (event) => {
         event.preventDefault();
+
+        finalSubmit.disabled = true;
+        // Add spinning cursor style
+        const cursor = document.querySelector('body') as HTMLBodyElement;
+        cursor.style.cursor = 'wait';
 
         const response = await fetch('/api/submit', {
             method: 'POST',
