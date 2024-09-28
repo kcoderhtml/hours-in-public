@@ -1,6 +1,8 @@
 ---
 import Base from "../components/Base.astro";
 
+import { getSession, type Session } from "../utils/auth/auth";
+
 let hackatimeToken = Astro.cookies.get("wakapi-token")?.value;
 
 // save the value to cookies on post
@@ -56,10 +58,15 @@ function formatTime(seconds: number) {
     return `${hours > 0 ? hours + "h " : ""} ${minutes > 0 ? minutes + "m " : ""} ${secondsFormatted > 0 ? secondsFormatted + "s" : ""}`;
 }
 
+let session: Session | null = null;
+const sessionCookie = Astro.cookies.get("session")?.value;
+if (sessionCookie !== undefined) {
+	session = getSession(sessionCookie);
+}
 ---
 
 <Base>
-    <p>Hi!</p>
+    <p>Hi {session?.profile.name}!</p>
 
     {
 		errorMsg && (

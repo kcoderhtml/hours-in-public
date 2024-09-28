@@ -8,6 +8,7 @@ export interface Session {
   profile: {
     id: string;
     name: string;
+    fullname: string;
     email: string;
     picture: string;
     locale: string;
@@ -128,7 +129,8 @@ export async function createSession(
       dateCreated: Date.now(),
       profile: {
         id: profileData.sub,
-        name: profileData.name,
+        name: profileData.given_name,
+        fullname: profileData.name,
         email: profileData.email,
         picture: profileData.picture,
         locale: profileData.locale,
