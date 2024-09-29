@@ -22,6 +22,9 @@ export const POST: APIRoute = async ({ request }) => {
       projects: { name: string; time: string; seconds: number }[];
     }[];
     hackatimeUser: string;
+    allergies: string;
+    comments: string;
+    fudge: string;
   } = await request.json();
 
   if (!data) {
@@ -35,10 +38,13 @@ export const POST: APIRoute = async ({ request }) => {
           name: session?.profile.fullname,
           slackID: session?.profile.id,
           repoLink: repo,
-          projectId: name,
+          projectHackatimeId: name,
           projectHoursReadable: time,
           projectSeconds: seconds,
           hackatimeUserid: data.hackatimeUser,
+          allergies: data.allergies,
+          comments: data.comments,
+          fudgeType: data.fudge,
         });
       }
     }

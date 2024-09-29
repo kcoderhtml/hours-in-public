@@ -7,10 +7,13 @@ export interface ProjectDock extends Item {
   name: string;
   slackID: string;
   repoLink: string;
-  projectId: string;
+  projectHackatimeId: string;
   projectHoursReadable: string;
   projectSeconds: number;
   hackatimeUserid: string;
+  allergies: string;
+  fudgeType: string;
+  comments: string;
 }
 
 export const ProjectDockTable: Table<ProjectDock> = {
@@ -21,18 +24,24 @@ export const ProjectDockTable: Table<ProjectDock> = {
     name: "fldfBGUwetXFGtAum",
     slackID: "fld0kv7ajtpvefHKc",
     repoLink: "fldwHQYbLLp8mWCN3",
-    projectId: "fldaw8gMBtCkbVrcK",
+    projectHackatimeId: "fldaw8gMBtCkbVrcK",
     projectHoursReadable: "fldo9xlH5TKHxKiAm",
     projectSeconds: "fld3MGx10u5eRxrhr",
     hackatimeUserid: "fld9BMhrAbSOoV23B",
+    allergies: "fldaMtZs0MxieZy9h",
+    fudgeType: "fldhKArjlI4844uRH",
+    comments: "fldL1jCjdoRvwmpAs",
   },
   schema: {
     name: "string",
     slackID: "string",
     repoLink: "string",
-    projectId: "string",
+    projectHackatimeId: "string",
     projectHoursReadable: "string",
     projectSeconds: "number",
     hackatimeUserid: "string",
+    allergies: "string",
+    fudgeType: "string",
+    comments: "string",
   },
 };
