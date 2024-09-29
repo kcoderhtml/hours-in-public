@@ -1,7 +1,20 @@
 ---
 import Base from "../components/Base.astro";
 
+import { AirtableTs } from "airtable-ts";
+import { ProjectDockTable } from "./api/airtableTypes";
+
+const db = new AirtableTs({ apiKey: process.env.AIRTABLE_API_KEY });
+
 import { getSession, type Session } from "../utils/auth/auth";
+
+let session: Session | null = null;
+const sessionCookie = Astro.cookies.get("session")?.value;
+if (sessionCookie !== undefined) {
+	session = getSession(sessionCookie);
+}
+
+const airtableProjects = await db.scan(ProjectDockTable, {filterByFormula: `{Slack ID} = "${session?.profile.id}"`});
 
 let hackatimeToken = Astro.cookies.get("wakapi-token")?.value;
 
@@ -50,18 +63,14 @@ if (hackatimeToken && hackatimeToken !== "") {
     });
 }
 
+const projects: Category[] = summary?.projects.filter(project => !airtableProjects.some(airtableProject => airtableProject.projectId === project.key)) ?? [];
+
 function formatTime(seconds: number) {
     const hours = Math.floor(seconds / 3600);
     const minutes = Math.floor((seconds % 3600) / 60);
     const secondsFormatted = Math.floor(seconds % 60);
 
     return `${hours > 0 ? hours + "h " : ""} ${minutes > 0 ? minutes + "m " : ""} ${secondsFormatted > 0 ? secondsFormatted + "s" : ""}`;
-}
-
-let session: Session | null = null;
-const sessionCookie = Astro.cookies.get("session")?.value;
-if (sessionCookie !== undefined) {
-	session = getSession(sessionCookie);
 }
 ---
 
@@ -81,13 +90,13 @@ if (sessionCookie !== undefined) {
         </form>
     )}
 
-    { (hackatimeToken && hackatimeToken != "" && summary) && (
+    { (hackatimeToken && hackatimeToken != "" && summary && projects.length > 0) && (
         <p>Thank you for submitting your token! It is: <span class="inline-code">{hackatimeToken}</span></p>
 
         <div id="projects">
-            <h4 class="mt-10">You have {summary.projects.length} projects with a combined total of <span class="inline-code" data-hackatime-id={summary.user_id} id="hackatime_token">{formatTime(summary.projects.reduce((total, project) => total + project.total, 0))}</span></h4>
+            <h4 class="mt-10">You have {projects.length} projects with a combined total of <span class="inline-code" data-hackatime-id={summary.user_id} id="hackatime_token">{formatTime(projects.reduce((total, project) => total + project.total, 0))}</span></h4>
             <div class="grid grid-cols-3 gap-4 mt-5" id="projects-drag-from">
-                {summary.projects.map((project, index) => (
+                {projects.map((project, index) => (
                     <div data-swapy-slot={index} class="min-h-24 border-secondary-tertiary dark:border-secondary-dark-tertiary border-solid border-4 rounded-lg">
                         <div class="bg-secondary-primary dark:bg-secondary-dark-primary rounded-lg shadow-md p-4" data-swapy-item={index}>
                             <h3 class="text-xl font-bold">{project.key}</h3>
@@ -111,7 +120,7 @@ if (sessionCookie !== undefined) {
                         <span class="hidden text-primary dark:text-primary"></span>
                     </form>
 
-                    {summary.projects.map((project, index) => (
+                    {projects.map((project, index) => (
                         <div data-swapy-slot={"project-" + index} class="m-2 min-h-[6.5rem] border-secondary-tertiary dark:border-secondary-dark-tertiary border-solid border-4 rounded-lg" id={"project-submission-"+index}></div>
                     ))}
                 </div>
@@ -129,6 +138,12 @@ if (sessionCookie !== undefined) {
             </div>
         </div>
     )}
+
+    { (hackatimeToken && hackatimeToken != "" && summary && projects.length === 0) && (
+        <p>Thank you for submitting your token! It is: <span class="inline-code">{hackatimeToken}</span></p>
+        <p class="mt-4">You have no projects left to submit.</p>
+    )}
+
 
 </Base>
 

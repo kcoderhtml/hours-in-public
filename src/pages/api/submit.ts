@@ -35,7 +35,7 @@ export const POST: APIRoute = async ({ request }) => {
           name: session?.profile.fullname,
           slackID: session?.profile.id,
           repoLink: repo,
-          projectsId: name,
+          projectId: name,
           projectHoursReadable: time,
           projectSeconds: seconds,
           hackatimeUserid: data.hackatimeUser,
