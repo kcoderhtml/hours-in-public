@@ -49,7 +49,7 @@ let summary: Summary | null = null;
 let errorMsg: string | null = null;
 
 if (hackatimeToken && hackatimeToken !== "") {
-    summary = await fetch("https://waka.hackclub.com/api/summary?from=2024-09-19&to=2024-09-30", {
+    summary = await fetch("https://waka.hackclub.com/api/summary?from=2024-09-19&to=2024-09-30&recompute=true", {
         headers: {
             Authorization: `Bearer ${btoa(hackatimeToken!)}`
         }
