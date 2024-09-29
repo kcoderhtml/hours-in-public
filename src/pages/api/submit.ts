@@ -3,7 +3,7 @@ import type { APIRoute } from "astro";
 import { getSession, type Session } from "../../utils/auth/auth";
 
 import { AirtableTs } from "airtable-ts";
-import { ProjectDockTable } from "./airtableTypes";
+import { ProjectDockTable, usersTable } from "./airtableTypes";
 
 const db = new AirtableTs({ apiKey: process.env.AIRTABLE_API_KEY });
 
@@ -33,19 +33,35 @@ export const POST: APIRoute = async ({ request }) => {
   } else if (data.submittedProjects.length === 0) {
     return new Response("No data provided", { status: 400 });
   } else {
+    // check if a user exists and if they dont then make one
+    let user = await db
+      .scan(usersTable, {
+        filterByFormula: `{Slack ID} = "${session?.profile.id}"`,
+      })
+      .then((res) => res[0]);
+
+    if (!user) {
+      user = await db.insert(usersTable, {
+        name: session?.profile.fullname!,
+        slackID: session?.profile.id!,
+        hackatimeUserid: data.hackatimeUser,
+        fudgeType: data.fudge,
+        allergies: data.allergies,
+        comments: data.comments,
+        status: "active",
+        projects: [],
+        totalProjectSeconds: null,
+      });
+    }
+
     for (const { repo, invalid, projects } of data.submittedProjects) {
       for (const { name, time, seconds } of projects) {
         await db.insert(ProjectDockTable, {
-          name: session?.profile.fullname,
-          slackID: session?.profile.id,
+          user: [user.id],
           repoLink: repo,
           projectHackatimeId: name,
           projectHoursReadable: time,
           projectSeconds: seconds,
-          hackatimeUserid: data.hackatimeUser,
-          allergies: data.allergies,
-          comments: data.comments,
-          fudgeType: data.fudge,
           invalid,
         });
       }

@@ -4,16 +4,11 @@ import type { Item, Table } from "airtable-ts";
 
 export interface ProjectDock extends Item {
   id: string;
-  name: string;
-  slackID: string;
-  repoLink: string;
   projectHackatimeId: string;
+  user: string[];
+  repoLink: string;
   projectHoursReadable: string;
   projectSeconds: number;
-  hackatimeUserid: string;
-  allergies: string;
-  fudgeType: string;
-  comments: string;
   invalid: boolean;
   status: string;
 }
@@ -23,31 +18,62 @@ export const ProjectDockTable: Table<ProjectDock> = {
   baseId: "appUpK8vBRXvkdFai",
   tableId: "tblY3Tp99L3XKDokW",
   mappings: {
-    name: "fldfBGUwetXFGtAum",
-    slackID: "fld0kv7ajtpvefHKc",
-    repoLink: "fldwHQYbLLp8mWCN3",
     projectHackatimeId: "fldaw8gMBtCkbVrcK",
+    user: "fldslTivF3vTEmBDA",
+    repoLink: "fldwHQYbLLp8mWCN3",
     projectHoursReadable: "fldo9xlH5TKHxKiAm",
     projectSeconds: "fld3MGx10u5eRxrhr",
-    hackatimeUserid: "fld9BMhrAbSOoV23B",
-    allergies: "fldaMtZs0MxieZy9h",
-    fudgeType: "fldhKArjlI4844uRH",
-    comments: "fldL1jCjdoRvwmpAs",
     invalid: "fldqwrgPALiSfT5Q5",
     status: "fld7Q7JEWH0OxlYT9",
   },
   schema: {
-    name: "string",
-    slackID: "string",
-    repoLink: "string",
     projectHackatimeId: "string",
+    user: "string[]",
+    repoLink: "string",
     projectHoursReadable: "string",
     projectSeconds: "number",
-    hackatimeUserid: "string",
-    allergies: "string",
-    fudgeType: "string",
-    comments: "string",
     invalid: "boolean",
     status: "string",
+  },
+};
+
+export interface User extends Item {
+  id: string;
+  name: string;
+  slackID: string;
+  hackatimeUserid: string;
+  fudgeType: string;
+  allergies: string;
+  comments: string;
+  status: string;
+  projects: string[];
+  totalProjectSeconds: number | null;
+}
+
+export const usersTable: Table<User> = {
+  name: "Users",
+  baseId: "appUpK8vBRXvkdFai",
+  tableId: "tblPAOIZEraEMrJrw",
+  mappings: {
+    name: "fldT59BZSxPZp9f8i",
+    slackID: "fld6PZfbtJSVr8bxo",
+    hackatimeUserid: "fld7ezK41FEOU8fws",
+    fudgeType: "fldmxIjTSE9mbXCUZ",
+    allergies: "fldg5yWoJ06Fndno0",
+    comments: "fld5f4yQjicZKT9EV",
+    status: "fldw8KciwAY2dYqrw",
+    projects: "fldmGbHroxTp4On8H",
+    totalProjectSeconds: "fld6EtHCzLRSVVlyR",
+  },
+  schema: {
+    name: "string",
+    slackID: "string",
+    hackatimeUserid: "string",
+    fudgeType: "string",
+    allergies: "string",
+    comments: "string",
+    status: "string",
+    projects: "string[]",
+    totalProjectSeconds: "number | null",
   },
 };
