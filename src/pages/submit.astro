@@ -134,11 +134,16 @@ function formatTime(seconds: number) {
 
                 <h3 class="mt-2">Are you ready to submit?</h3>
                 <form class="max-w-screen-lg mt-4" id="final-fudge-form">
-                    <label for="allergies">Allergies (Don't fill out if you don't have any):</label>
-                    <input type="text" name="allergies" id="allergies" placeholder="peanuts, gluten, blueberries, etc ..." class="input-default border-secondary-tertiary dark:border-secondary-dark-tertiary border-solid rounded-md border-4 m-2"/>
                     <textarea name="comments" id="comments" placeholder="what did you like about the event? what didn't you like? How was the time amount of 10 hours in 10 days?" class="input-default border-secondary-tertiary dark:border-secondary-dark-tertiary border-solid rounded-md border-4 m-2" required/>
-                    <label for="fudge">You can see some options here: <a href="https://www.shelburnecountrystore.com/collections/our-famous-fudge">fudge website</a> or on slack <a href="https://hackclub.slack.com/archives/C07NUNPGEU8/p1727570526101829">here.</a></label>
-                    <input type="text" name="fudge" id="fudge" placeholder="maple, maple bacon, vanilla, chocolate, etc ..." class="input-default border-secondary-tertiary dark:border-secondary-dark-tertiary border-solid rounded-md border-4 m-2"/>
+                    
+                    { projects.reduce((total, project) => total + project.total, 0) > 36000 && (
+                        <label for="allergies">Allergies (Don't fill out if you don't have any):</label>
+                        <input type="text" name="allergies" id="allergies" placeholder="peanuts, gluten, blueberries, etc ..." class="input-default border-secondary-tertiary dark:border-secondary-dark-tertiary border-solid rounded-md border-4 m-2"/>
+                        
+                        <label for="fudge">You can see some options here: <a href="https://www.shelburnecountrystore.com/collections/our-famous-fudge">fudge website</a> or on slack <a href="https://hackclub.slack.com/archives/C07NUNPGEU8/p1727570526101829">here.</a></label>
+                        <input type="text" name="fudge" id="fudge" placeholder="maple, maple bacon, vanilla, chocolate, etc ..." class="input-default border-secondary-tertiary dark:border-secondary-dark-tertiary border-solid rounded-md border-4 m-2"/>
+                    )}
+
                     <input type="submit" class="btn-primary m-2" id="final-submit" value="Submit"/>
                 </form>
             </div>
