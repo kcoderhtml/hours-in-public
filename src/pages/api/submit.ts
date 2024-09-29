@@ -19,6 +19,7 @@ export const POST: APIRoute = async ({ request }) => {
   const data: {
     submittedProjects: {
       repo: string;
+      invalid: boolean;
       projects: { name: string; time: string; seconds: number }[];
     }[];
     hackatimeUser: string;
@@ -32,7 +33,7 @@ export const POST: APIRoute = async ({ request }) => {
   } else if (data.submittedProjects.length === 0) {
     return new Response("No data provided", { status: 400 });
   } else {
-    for (const { repo, projects } of data.submittedProjects) {
+    for (const { repo, invalid, projects } of data.submittedProjects) {
       for (const { name, time, seconds } of projects) {
         await db.insert(ProjectDockTable, {
           name: session?.profile.fullname,
@@ -45,6 +46,7 @@ export const POST: APIRoute = async ({ request }) => {
           allergies: data.allergies,
           comments: data.comments,
           fudgeType: data.fudge,
+          invalid,
         });
       }
     }

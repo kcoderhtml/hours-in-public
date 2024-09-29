@@ -111,13 +111,18 @@ function formatTime(seconds: number) {
             <div id="project-form">
                 <h4 class="mt-10">Please choose a project repo and projects</h4>
                 <p>Drag the projects related to the repo into the boxes below and then hit submit</p>
+                <p>Check the checkbox if the projects are invalid and use this repo url: <a href="https://notvalidproject.sh">https://notvalidproject.sh</a></p>
 
                 <div class="bg-secondary-secondary dark:bg-secondary-dark-secondary grow m-2 border-primary border-solid border-4 rounded-md grid grid-cols-3 gap-4">
                     <form style="grid-column: span 3" class="flex flex-row">
                         <input type="url" name="repo" id="repo" placeholder="Enter your repo url" class="input-default border-secondary-tertiary dark:border-secondary-dark-tertiary border-solid rounded-md border-4 m-2" required pattern="https?://.+"/>
+                        
+                        <input type="checkbox" name="invalid" id="invalid" class="w-16 accent-accent-primary dark:accent-accent-dark-primary"/>
+
                         <input type="submit" value="submit" class="btn-primary m-2" id="project-submit"/>
+
                         <h2 class="flex items-center p-2 text-secondary-primary dark:text-secondary-dark-primary" id="submission-count">0</h2>
-                        <span class="hidden text-primary dark:text-primary"></span>
+                        <span class="hidden text-primary dark:text-primary bg-red-800"></span>
                     </form>
 
                     {projects.map((project, index) => (
@@ -172,9 +177,10 @@ function formatTime(seconds: number) {
 </script>
 
 <script>
-    let submittedProjects: {repo: string, projects: {name: string, time: string, seconds: number}[]}[] = []
+    let submittedProjects: {repo: string, invalid: boolean, projects: {name: string, time: string, seconds: number}[]}[] = []
     const projectSubmitButton = document.querySelector('#project-submit') as HTMLButtonElement;
     const repo = document.querySelector('#repo') as HTMLInputElement;
+    const invalid = document.querySelector('#invalid') as HTMLInputElement;
     const submissionCount = document.querySelector('#submission-count') as HTMLHeadingElement;
     const projectView = document.querySelector('#project-view') as HTMLDivElement;
     const projectsDragFrom = document.querySelector('#projects-drag-from') as HTMLDivElement;
@@ -220,18 +226,20 @@ function formatTime(seconds: number) {
 
         submittedProjects.push({
             repo: repo.value,
+            invalid: invalid.checked,
             projects: projectData
         });
 
         // add an item to the prejects view div without un hidding it
         projectListFinal.innerHTML = submittedProjects.map((project, index) => 
-            `<li class="bg-secondary-tertiary dark:bg-secondary-dark-tertiary m-2 border-primary border-solid border-2 rounded-md p-4">
+            `<li class="${project.invalid ? 'bg-red-800' : 'bg-secondary-tertiary dark:bg-secondary-dark-tertiary'} m-2 border-primary border-solid border-2 rounded-md p-4 ">
+                ${project.invalid ? "<p><strong>Invalid</strong></p>" : ""}
                 <p><strong>Repo:</strong> <a href="${project.repo}" target="_blank">${project.repo}</a></p>
                 <p><strong>Projects:</strong></p>
                 <ul>
-                ${project.projects.map((p) => `
-                    <li>${p.name} - ${p.time}</li>
-                `).join('')}
+                    ${project.projects.map((p) => `
+                        <li>${p.name} - ${p.time}</li>
+                    `).join('')}
                 </ul>
             </li>
             `).join('');
@@ -243,8 +251,9 @@ function formatTime(seconds: number) {
             project.style.transform = 'translateX(100%)';
         });
 
-        // clear the repo input
+        // clear the repo input and the invalid checkbox
         repo.value = "";
+        invalid.checked = false;
     
         // clear the project submission divs
         projects.forEach((project) => {
@@ -284,9 +293,9 @@ function formatTime(seconds: number) {
         const cursor = document.querySelector('body') as HTMLBodyElement;
         cursor.style.cursor = 'wait';
 
-        const allergies = (finalFudgeForm.allergies as HTMLInputElement).value;
-        const comments = (finalFudgeForm.comments as HTMLTextAreaElement).value;
-        const fudge = (finalFudgeForm.fudge as HTMLInputElement).value;
+        const allergies = (finalFudgeForm.allergies as HTMLInputElement)?.value ?? "";
+        const comments = (finalFudgeForm.comments as HTMLTextAreaElement)?.value ?? "";
+        const fudge = (finalFudgeForm.fudge as HTMLInputElement)?.value ?? "";
 
         const response = await fetch('/api/submit', {
             method: 'POST',

@@ -14,6 +14,8 @@ export interface ProjectDock extends Item {
   allergies: string;
   fudgeType: string;
   comments: string;
+  invalid: boolean;
+  status: string;
 }
 
 export const ProjectDockTable: Table<ProjectDock> = {
@@ -31,6 +33,8 @@ export const ProjectDockTable: Table<ProjectDock> = {
     allergies: "fldaMtZs0MxieZy9h",
     fudgeType: "fldhKArjlI4844uRH",
     comments: "fldL1jCjdoRvwmpAs",
+    invalid: "fldqwrgPALiSfT5Q5",
+    status: "fld7Q7JEWH0OxlYT9",
   },
   schema: {
     name: "string",
@@ -43,5 +47,7 @@ export const ProjectDockTable: Table<ProjectDock> = {
     allergies: "string",
     fudgeType: "string",
     comments: "string",
+    invalid: "boolean",
+    status: "string",
   },
 };
