@@ -1,0 +1,29 @@
+---
+import Base from "../components/Base.astro";
+---
+
+<Base noHeader={true}>
+    <script src="/tsparticles.confetti.bundle.min.js" is:inline></script>
+    <section class="flex flex-col grow justify-center">
+        <p>You did it! Thanks for submitting your projects! <br> If you happen to make another project that isn't submitted come back when you are ready to submit and you will see it on the submit page</p>
+
+        <p id="redirect" class="mt-5">Redirecting you back home in 5</p>
+    </section>
+</Base>
+
+
+
+<script>
+	const link = document.getElementById("redirect") as HTMLParagraphElement;
+
+	// count down to redirect
+	let count = 5;
+	const interval = setInterval(() => {
+		count--;
+		link.innerText = `Redirecting you back to known teritory in ${count}`;
+		if (count === 0) {
+			clearInterval(interval);
+			window.location.href = "/";
+		}
+	}, 1000);
+</script>
