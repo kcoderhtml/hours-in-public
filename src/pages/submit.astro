@@ -2,7 +2,7 @@
 import Base from "../components/Base.astro";
 
 import { AirtableTs } from "airtable-ts";
-import { ProjectDockTable, usersTable } from "./api/airtableTypes";
+import { ProjectDockTable, usersTable, type ProjectDock } from "./api/airtableTypes";
 
 const db = new AirtableTs({ apiKey: process.env.AIRTABLE_API_KEY });
 
@@ -15,10 +15,10 @@ if (sessionCookie !== undefined) {
 }
 
 const airtableUsers = await db.scan(usersTable, {filterByFormula: `{Slack ID} = "${session?.profile.id}"`});
-
-const airtableProjects = await db.scan(ProjectDockTable, {filterByFormula: `SEARCH("${airtableUsers[0].name}", User) > 0`});
-
-console.log(airtableProjects, airtableUsers[0].id)
+let airtableProjects: ProjectDock[] = []
+if (airtableUsers.length > 0) {
+    airtableProjects = await db.scan(ProjectDockTable, {filterByFormula: `SEARCH("${airtableUsers[0].name}", User) > 0`});
+}
 
 let hackatimeToken = Astro.cookies.get("wakapi-token")?.value;
 
