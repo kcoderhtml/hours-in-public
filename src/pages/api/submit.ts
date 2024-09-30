@@ -3,7 +3,7 @@ import type { APIRoute } from "astro";
 import { getSession, type Session } from "../../utils/auth/auth";
 
 import { AirtableTs } from "airtable-ts";
-import { ProjectDockTable, usersTable } from "./airtableTypes";
+import { ProjectDockTable, reposTable, usersTable } from "./airtableTypes";
 
 const db = new AirtableTs({ apiKey: process.env.AIRTABLE_API_KEY });
 
@@ -19,6 +19,10 @@ export const POST: APIRoute = async ({ request }) => {
   const data: {
     submittedProjects: {
       repo: string;
+      name: string;
+      description: string;
+      demoLink: string;
+      liveUrl: string;
       invalid: boolean;
       projects: { name: string; time: string; seconds: number }[];
     }[];
@@ -33,6 +37,7 @@ export const POST: APIRoute = async ({ request }) => {
   } else if (data.submittedProjects.length === 0) {
     return new Response("No data provided", { status: 400 });
   } else {
+    console.log(data);
     // check if a user exists and if they dont then make one
     let user = await db
       .scan(usersTable, {
@@ -52,11 +57,37 @@ export const POST: APIRoute = async ({ request }) => {
       });
     }
 
-    for (const { repo, invalid, projects } of data.submittedProjects) {
+    for (const {
+      repo,
+      description,
+      demoLink,
+      liveUrl,
+      invalid,
+      projects,
+      name,
+    } of data.submittedProjects) {
+      let repoRecord = await db
+        .scan(reposTable, {
+          filterByFormula: `{link} = "${repo}"`,
+        })
+        .then((res) => res[0]);
+
+      if (!repoRecord) {
+        repoRecord = await db.insert(reposTable, {
+          name,
+          link: repo,
+          hackatimeProjects: [],
+          description,
+          demoLink,
+          liveUrl,
+        });
+      }
+
       for (const { name, time, seconds } of projects) {
         await db.insert(ProjectDockTable, {
           user: [user.id],
           repoLink: repo,
+          repo: [repoRecord.id],
           projectHackatimeId: name,
           projectHoursReadable: time,
           projectSeconds: seconds,

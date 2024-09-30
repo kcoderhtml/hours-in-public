@@ -132,6 +132,13 @@ function formatTime(seconds: number) {
                     {projects.map((project, index) => (
                         <div data-swapy-slot={"project-" + index} class="m-2 min-h-[6.5rem] border-secondary-tertiary dark:border-secondary-dark-tertiary border-solid border-4 rounded-lg" id={"project-submission-"+index}></div>
                     ))}
+
+                    <form style="grid-column: span 3;" class="flex flex-col pr-4">
+                        <input type="text" name="projectName" id="projectName" placeholder="What is your projects name?" class="input-default border-secondary-tertiary dark:border-secondary-dark-tertiary border-solid rounded-md border-4 m-2" required/>
+                        <input type="url" name="liveLink" id="liveLink" placeholder="Enter the url for your live demo" class="input-default border-secondary-tertiary dark:border-secondary-dark-tertiary border-solid rounded-md border-4 m-2" required pattern="https?://.+"/>
+                        <input type="url" name="demoURL" id="demoURL" placeholder="Enter a link to a video demo or a link to an image from #cdn" class="input-default border-secondary-tertiary dark:border-secondary-dark-tertiary border-solid rounded-md border-4 m-2" required pattern="https?://.+"/>
+                        <textarea name="description" id="description" placeholder="What is this project for? What was hard about making it and what was easy?" class="input-default border-secondary-tertiary dark:border-secondary-dark-tertiary border-solid rounded-md border-4 m-2" required></textarea>
+                    </form>
                 </div>
             </div>
 
@@ -181,11 +188,27 @@ function formatTime(seconds: number) {
 </script>
 
 <script>
-    let submittedProjects: {repo: string, invalid: boolean, projects: {name: string, time: string, seconds: number}[]}[] = []
+    let submittedProjects: {
+        repo: string,
+        name: string,
+        description: string,
+        demoLink: string,
+        liveUrl: string,
+        invalid: boolean,
+        projects: {name: string, time: string, seconds: number}[]
+    }[] = []
+
     const projectSubmitButton = document.querySelector('#project-submit') as HTMLButtonElement;
     const repo = document.querySelector('#repo') as HTMLInputElement;
+    const liveLink = document.querySelector('#liveLink') as HTMLInputElement;
+    const demoURL = document.querySelector('#demoURL') as HTMLInputElement;
+    const description = document.querySelector('#description') as HTMLTextAreaElement;
+    const name = document.querySelector('#projectName') as HTMLInputElement;
+    
     const invalid = document.querySelector('#invalid') as HTMLInputElement;
+
     const submissionCount = document.querySelector('#submission-count') as HTMLHeadingElement;
+
     const projectView = document.querySelector('#project-view') as HTMLDivElement;
     const projectsDragFrom = document.querySelector('#projects-drag-from') as HTMLDivElement;
     const projectForm = document.querySelector('#project-form') as HTMLDivElement;
@@ -230,6 +253,10 @@ function formatTime(seconds: number) {
 
         submittedProjects.push({
             repo: repo.value,
+            name: name.value,
+            description: description.value,
+            demoLink: demoURL.value,
+            liveUrl: liveLink.value,
             invalid: invalid.checked,
             projects: projectData
         });
@@ -238,8 +265,13 @@ function formatTime(seconds: number) {
         projectListFinal.innerHTML = submittedProjects.map((project, index) => 
             `<li class="${project.invalid ? 'bg-red-800' : 'bg-secondary-tertiary dark:bg-secondary-dark-tertiary'} m-2 border-primary border-solid border-2 rounded-md p-4 ">
                 ${project.invalid ? "<p><strong>Invalid</strong></p>" : ""}
+                <p><strong>${project.name}</strong></p>
                 <p><strong>Repo:</strong> <a href="${project.repo}" target="_blank">${project.repo}</a></p>
-                <p><strong>Projects:</strong></p>
+                <p><strong>Live Link:</strong> <a href="${project.liveUrl}" target="_blank">${project.liveUrl}</a></p>
+                <p><strong>Demo Link:</strong> <a href="${project.demoLink}" target="_blank">${project.demoLink}</a></p>
+                <p><strong>Description:</strong> ${project.description}</p>
+
+                <p class="mt-4"><strong>Projects:</strong></p>
                 <ul>
                     ${project.projects.map((p) => `
                         <li>${p.name} - ${p.time}</li>
@@ -257,6 +289,10 @@ function formatTime(seconds: number) {
 
         // clear the repo input and the invalid checkbox
         repo.value = "";
+        name.value = "";
+        description.value = "";
+        demoURL.value = "";
+        liveLink.value = "";
         invalid.checked = false;
     
         // clear the project submission divs

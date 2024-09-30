@@ -11,6 +11,8 @@ export interface ProjectDock extends Item {
   projectSeconds: number;
   invalid: boolean;
   status: string;
+  isProject: string;
+  repo: string[];
 }
 
 export const ProjectDockTable: Table<ProjectDock> = {
@@ -25,6 +27,8 @@ export const ProjectDockTable: Table<ProjectDock> = {
     projectSeconds: "fld3MGx10u5eRxrhr",
     invalid: "fldqwrgPALiSfT5Q5",
     status: "fld7Q7JEWH0OxlYT9",
+    isProject: "fld3R9Piy8Wd7ttIF",
+    repo: "fldm7tt49JBDi33lN",
   },
   schema: {
     projectHackatimeId: "string",
@@ -34,6 +38,8 @@ export const ProjectDockTable: Table<ProjectDock> = {
     projectSeconds: "number",
     invalid: "boolean",
     status: "string",
+    isProject: "string",
+    repo: "string[]",
   },
 };
 
@@ -48,6 +54,7 @@ export interface User extends Item {
   status: string;
   projects: string[];
   totalProjectSeconds: number | null;
+  prize: string | null;
 }
 
 export const usersTable: Table<User> = {
@@ -64,6 +71,7 @@ export const usersTable: Table<User> = {
     status: "fldw8KciwAY2dYqrw",
     projects: "fldmGbHroxTp4On8H",
     totalProjectSeconds: "fld6EtHCzLRSVVlyR",
+    prize: "fldnxpLSQZGBYe2tb",
   },
   schema: {
     name: "string",
@@ -75,5 +83,99 @@ export const usersTable: Table<User> = {
     status: "string",
     projects: "string[]",
     totalProjectSeconds: "number | null",
+    prize: "string | null",
+  },
+};
+
+export interface FilloutForm extends Item {
+  id: string;
+  name: string;
+  liveLink: string;
+  codeLink: string;
+  hours: number;
+  // Unsupported field Image / Video of type multipleAttachments
+  firstName: string;
+  lastName: string;
+  addressLine1: string;
+  addressCity: string;
+  addressState: string;
+  addressZip: string;
+  addressCountry: string;
+  rSVPForShowTell: boolean;
+  slackUsername: string;
+  fullAddress: string;
+}
+
+export const FilloutFormTable: Table<FilloutForm> = {
+  name: "Fillout form",
+  baseId: "appUpK8vBRXvkdFai",
+  tableId: "tblb3uTVW3R6cYf1j",
+  mappings: {
+    name: "fldMdty5Zq2ing3xN",
+    liveLink: "fldeUVQqUJhuB7wuE",
+    codeLink: "fldJXS0UJ527CYohu",
+    hours: "fldfzZm6b3UzpFKDK",
+    // Unsupported field Image / Video: fldjcaQQ0hr7QI7Cm
+    firstName: "fldicUXjiDFQJw684",
+    lastName: "fldh6L6UqTBLYJRLz",
+    addressLine1: "fldRX16GLAVekOV4Q",
+    addressCity: "fldlOKIsHyfEVyI9L",
+    addressState: "fldvMEteKcnlJ7Tg6",
+    addressZip: "fldhDT6dZm9rnhJmF",
+    addressCountry: "fldaiObZAvlbwG40e",
+    rSVPForShowTell: "fldKqFJCDjjnnOTnP",
+    slackUsername: "fldbQ5OuZS0hB7ufX",
+    fullAddress: "fld8F0O8y6ffB1Pws",
+  },
+  schema: {
+    name: "string",
+    liveLink: "string",
+    codeLink: "string",
+    hours: "number",
+    firstName: "string",
+    lastName: "string",
+    addressLine1: "string",
+    addressCity: "string",
+    addressState: "string",
+    addressZip: "string",
+    addressCountry: "string",
+    rSVPForShowTell: "boolean",
+    slackUsername: "string",
+    fullAddress: "string",
+  },
+};
+
+export interface Repo extends Item {
+  id: string;
+  name: string;
+  link: string;
+  hackatimeProjects: string[];
+  totalValidSeconds: number | null;
+  description: string;
+  liveUrl: string;
+  demoLink: string;
+}
+
+export const reposTable: Table<Repo> = {
+  name: "Repos",
+  baseId: "appUpK8vBRXvkdFai",
+  tableId: "tbl7D4Ccj2k2hN0lF",
+  mappings: {
+    name: "fldrRbzP5oT0bZh6u",
+    link: "flditV26u6dMa86G0",
+    hackatimeProjects: "fldMjHtOJw4UMD65z",
+    totalValidSeconds: "fldjchWSacccF1qXC",
+    description: "fldcAeA9rF2WXQJYu",
+    liveUrl: "fldBijJLGMKTdYcfP",
+    demoLink: "fldKLpk6vquiqwQBh",
+  },
+  schema: {
+    name: "string",
+    link: "string",
+    hackatimeProjects: "string[]",
+    totalValidSeconds: "number | null",
+    description: "string",
+    liveUrl: "string",
+    demoLink: "string",
   },
 };
