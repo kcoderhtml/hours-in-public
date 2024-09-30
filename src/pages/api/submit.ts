@@ -48,9 +48,7 @@ export const POST: APIRoute = async ({ request }) => {
         fudgeType: data.fudge,
         allergies: data.allergies,
         comments: data.comments,
-        status: "active",
         projects: [],
-        totalProjectSeconds: null,
       });
     }
 
