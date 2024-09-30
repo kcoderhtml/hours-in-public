@@ -11,7 +11,6 @@ export interface ProjectDock extends Item {
   projectSeconds: number;
   invalid: boolean;
   status: string;
-  isProject: string;
   repo: string[];
 }
 
@@ -27,7 +26,6 @@ export const ProjectDockTable: Table<ProjectDock> = {
     projectSeconds: "fld3MGx10u5eRxrhr",
     invalid: "fldqwrgPALiSfT5Q5",
     status: "fld7Q7JEWH0OxlYT9",
-    isProject: "fld3R9Piy8Wd7ttIF",
     repo: "fldm7tt49JBDi33lN",
   },
   schema: {
@@ -38,7 +36,6 @@ export const ProjectDockTable: Table<ProjectDock> = {
     projectSeconds: "number",
     invalid: "boolean",
     status: "string",
-    isProject: "string",
     repo: "string[]",
   },
 };
@@ -157,6 +154,7 @@ export interface Repo extends Item {
   description: string;
   liveUrl: string;
   demoLink: string;
+  projetStatus: string;
 }
 
 export const reposTable: Table<Repo> = {
@@ -171,6 +169,7 @@ export const reposTable: Table<Repo> = {
     description: "fldcAeA9rF2WXQJYu",
     liveUrl: "fldBijJLGMKTdYcfP",
     demoLink: "fldKLpk6vquiqwQBh",
+    projetStatus: "fldVzYNUZiFjIgCRP",
   },
   schema: {
     name: "string",
@@ -180,5 +179,6 @@ export const reposTable: Table<Repo> = {
     description: "string",
     liveUrl: "string",
     demoLink: "string",
+    projetStatus: "string",
   },
 };
