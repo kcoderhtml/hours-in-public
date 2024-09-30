@@ -160,6 +160,9 @@ function formatTime(seconds: number) {
                         <input type="text" name="fudge" id="fudge" placeholder="maple, maple bacon, vanilla, chocolate, etc ..." class="input-default border-secondary-tertiary dark:border-secondary-dark-tertiary border-solid rounded-md border-4 m-2"/>
                     )}
 
+                    <input type="text" list="addressList" name="address" id="address" placeholder="What is your address?" class="input-default border-secondary-tertiary dark:border-secondary-dark-tertiary border-solid rounded-md border-4 m-2" required/>
+                    <datalist id="addressList"></datalist>
+
                     <input type="submit" class="btn-primary m-2" id="final-submit" value="Submit"/>
                 </form>
             </div>
@@ -174,6 +177,37 @@ function formatTime(seconds: number) {
 
 
 </Base>
+
+<script>
+    const address = document.querySelector('#address') as HTMLInputElement;
+    const dropdown = document.querySelector('#addressList') as HTMLDataListElement;
+
+    address.addEventListener('input', async (event) => {
+        if (address.value === "") {
+            dropdown.innerHTML = '';
+            return;
+        }
+
+        try {
+            const response: { places: {formattedAddress: string}[] } = await fetch("/api/places?query="+address.value).then(res => res.json());
+            
+            console.log(response);
+
+            // Clear previous options
+            dropdown.innerHTML = '';
+
+            // Add new options
+            response.places.forEach(result => {
+                const option = document.createElement('option');
+                option.value = result.formattedAddress;
+                option.text = result.formattedAddress;
+                dropdown.appendChild(option);
+            });
+        } catch (error) {
+            console.error(error);
+        }
+    });
+</script>
 
 <script>
     import { createSwapy } from 'swapy'
