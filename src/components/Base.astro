@@ -41,7 +41,7 @@ const loggedIn = Astro.url.searchParams.get("checkSession");
 							{
 								session || loggedIn
 									? <a href="/logout">Logout</a>
-									: <a href=`https://slack.com/openid/connect/authorize?scope=openid%20email%20profile&response_type=code&redirect_uri=${Astro.url.origin}&client_id=${process.env.SLACK_CLIENT_ID}` class="mb-3"><Icon name="simple-icons:slack" class="-translate-y-[0.1rem]"/> Sign in with Slack</a>
+									: <a href=`https://slack.com/openid/connect/authorize?scope=openid%20email%20profile&response_type=code&redirect_uri=${Astro.url.origin}&client_id=${process.env.SLACK_CLIENT_ID}` class="mb-3"><Icon name="simple-icons:slack" class="-translate-y-[0.1rem]"/>Sign in with Slack</a>
 
 							}
 						</div>

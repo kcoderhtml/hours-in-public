@@ -76,7 +76,7 @@ if (
 	{
 		!session && !Astro.url.searchParams.get("checkSession") && (
 			<section class="flex flex-col items-center justify-center grow mb-56">
-				<p>Please sign in below with your Slack Acount</p>
+				<p>Please sign in below with your Slack Account</p>
 				<a href=`https://slack.com/openid/connect/authorize?scope=openid%20email%20profile&response_type=code&redirect_uri=${Astro.url.origin}&client_id=${process.env.SLACK_CLIENT_ID}` class="border-solid border-2 rounded-md border-accent-primary w-fit p-2 self-center mt-6"><Icon name="simple-icons:slack" class="-translate-y-[0.1rem]"/> Sign in with Slack</a>
 			</section>
 		)
