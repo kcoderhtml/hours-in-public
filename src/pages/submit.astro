@@ -257,15 +257,26 @@ function formatTime(seconds: number) {
         // get all the projects that are in the swappy div
         const projects = Array.from(document.querySelectorAll('[id^="project-submission-"]')).filter(project => project.children.length > 0) as HTMLDivElement[];
 
-        if (projects.length === 0 || repo.value == "" || !repo.validity) {
+        if (projects.length === 0 || repo.value == "" || !repo.validity || liveLink.value == "" || !liveLink.validity || demoURL.value == "" || !demoURL.validity || description.value == "" || !description.validity || name.value == "" || !name.validity) {
             let message = ""
             if (projects.length === 0) {
-                message += "Please drag some projects into the boxes\n\n"
-            }
-            if (repo.value == "") {
+                message += "Please drag some projects into the boxes"
+            } else if (repo.value == "") {
                 message += "Please fill in the repo"
             } else if (!repo.validity.valid) {
-                message += "Please fill in a valid url begining with http or https"
+                message += "Please fill in a valid url begining with http or https for the repo"
+            } else if (liveLink.value == "") {
+                message += "Please fill in the live link"
+            } else if (!liveLink.validity.valid) {
+                message += "Please fill in a valid url begining with http or https for the live link"
+            } else if (demoURL.value == "") {
+                message += "Please fill in the demo link"
+            } else if (!demoURL.validity.valid) {
+                message += "Please fill in a valid url begining with http or https for the demo link"
+            } else if (description.value == "") {
+                message += "Please fill in the description"
+            } else if (name.value == "") {
+                message += "Please fill in the project name"
             }
             
             alert(message);
@@ -370,6 +381,15 @@ function formatTime(seconds: number) {
         const allergies = (finalFudgeForm.allergies as HTMLInputElement)?.value ?? "";
         const comments = (finalFudgeForm.comments as HTMLTextAreaElement)?.value ?? "";
         const fudge = (finalFudgeForm.fudge as HTMLInputElement)?.value ?? "";
+        const address = (finalFudgeForm.address as HTMLInputElement)?.value ?? "";
+
+        // check that the form is filled out
+        if (comments === "" || address === "") {
+            alert("Please fill out the comments and address fields");
+            finalSubmit.disabled = false;
+            cursor.style.cursor = 'default';
+            return;
+        }
 
         const response = await fetch('/api/submit', {
             method: 'POST',
@@ -381,7 +401,8 @@ function formatTime(seconds: number) {
                 hackatimeUser: hackatimeToken.dataset.hackatimeId,
                 allergies,
                 comments,
-                fudge
+                fudge,
+                address
             })
         });
 

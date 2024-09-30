@@ -51,6 +51,7 @@ export interface User extends Item {
   fudgeType: string;
   allergies: string;
   comments: string;
+  address: string;
   status: string;
   projects: string[];
   totalProjectSeconds: number | null;
@@ -68,6 +69,7 @@ export const usersTable: Table<User> = {
     fudgeType: "fldmxIjTSE9mbXCUZ",
     allergies: "fldg5yWoJ06Fndno0",
     comments: "fld5f4yQjicZKT9EV",
+    address: "fldGyWzQ5edwXVbBy",
     status: "fldw8KciwAY2dYqrw",
     projects: "fldmGbHroxTp4On8H",
     totalProjectSeconds: "fld6EtHCzLRSVVlyR",
@@ -80,6 +82,7 @@ export const usersTable: Table<User> = {
     fudgeType: "string",
     allergies: "string",
     comments: "string",
+    address: "string",
     status: "string",
     projects: "string[]",
     totalProjectSeconds: "number | null",

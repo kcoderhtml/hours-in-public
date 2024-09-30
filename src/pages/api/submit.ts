@@ -30,6 +30,7 @@ export const POST: APIRoute = async ({ request }) => {
     allergies: string;
     comments: string;
     fudge: string;
+    address: string;
   } = await request.json();
 
   if (!data) {
@@ -53,6 +54,7 @@ export const POST: APIRoute = async ({ request }) => {
         fudgeType: data.fudge,
         allergies: data.allergies,
         comments: data.comments,
+        address: data.address,
         projects: [],
       });
     }
