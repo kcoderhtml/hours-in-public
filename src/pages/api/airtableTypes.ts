@@ -49,10 +49,10 @@ export interface User extends Item {
   allergies: string;
   comments: string;
   address: string;
-  status: string;
   projects: string[];
   totalProjectSeconds: number | null;
   prize: string | null;
+  prizeStatus: string;
 }
 
 export const usersTable: Table<User> = {
@@ -67,10 +67,10 @@ export const usersTable: Table<User> = {
     allergies: "fldg5yWoJ06Fndno0",
     comments: "fld5f4yQjicZKT9EV",
     address: "fldGyWzQ5edwXVbBy",
-    status: "fldw8KciwAY2dYqrw",
     projects: "fldmGbHroxTp4On8H",
     totalProjectSeconds: "fld6EtHCzLRSVVlyR",
     prize: "fldnxpLSQZGBYe2tb",
+    prizeStatus: "flddKDW75WeBO64ym",
   },
   schema: {
     name: "string",
@@ -80,10 +80,10 @@ export const usersTable: Table<User> = {
     allergies: "string",
     comments: "string",
     address: "string",
-    status: "string",
     projects: "string[]",
     totalProjectSeconds: "number | null",
     prize: "string | null",
+    prizeStatus: "string",
   },
 };
 
