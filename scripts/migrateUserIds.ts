@@ -1,4 +1,4 @@
-import { Client, type QueryResult } from "pg";
+import { Client } from "pg";
 
 const client = new Client(process.env.DATABASE_URL);
 
@@ -78,23 +78,20 @@ const users: { old: string; new: string }[] = [
   { old: "zrl", new: "U0266FRGP" },
   { old: "smashmaster", new: "U05Q3GJCFL6" },
   { old: "cwalker", new: "UDK5M9Y13" },
-  { old: "bobb08618", new: "users_not_found" },
-  { old: "dominic", new: "users_not_found" },
-  { old: "miyander", new: "users_not_found" },
-  { old: "Firepup650", new: "users_not_found" },
-  { old: "yc", new: "users_not_found" },
-  { old: "Bbooby", new: "users_not_found" },
-  { old: "khang200923", new: "users_not_found" },
-  { old: "marios", new: "users_not_found" },
-  { old: "msw", new: "users_not_found" },
-  { old: "Craig", new: "users_not_found" },
-  { old: "V205", new: "users_not_found" },
-  { old: "MMK21", new: "users_not_found" },
-  { old: "Jayx2u", new: "users_not_found" },
-  { old: "Cyclic", new: "users_not_found" },
-  { old: "EerierGosling", new: "users_not_found" },
-  { old: "muirrum", new: "users_not_found" },
-  { old: "vic", new: "users_not_found" },
+  { old: "Firepup650", new: "U06JLP2R8JV" },
+  { old: "yc", new: "U050RGDU8NN" },
+  { old: "khang200923", new: "U07N24APCA3" },
+  { old: "marios", new: "U04FMKCVASJ" },
+  { old: "msw", new: "U0C7B14Q3" },
+  { old: "EerierGosling", new: "U056J6JURFF" },
+  { old: "vic", new: "U072PTA5BNG" },
+  { old: "Cyclic", new: "U07B9NMJ6TY" },
+  { old: "MMK21", new: "U073M5L9U13" },
+  { old: "Jayx2u", new: "U079ZKY1CTU" },
+  { old: "muirrum", new: "U015MCCBXBP" },
+  { old: "dominic", new: "U05JX2BHANT" },
+  // { old: "bobb08618", new: "U078K08NN2Y" },
+  { old: "Craig", new: "U07FBU5MM8U" },
 ];
 
 function printProgress(text: string) {
@@ -156,12 +153,38 @@ async function updateUserId(
   }
 }
 
+async function checkIfUserExists(userId: string) {
+  const query = `
+    SELECT *
+    FROM users
+    WHERE id = '${userId}';
+    `;
+
+  try {
+    const result = await client.query(query);
+    return result.rowCount! > 0;
+  } catch (error) {
+    console.error("Error checking if user exists:", error);
+  }
+}
+
+const checkDups = false;
+
 (async () => {
   try {
     await client.connect();
     let i = 0;
     for (const user of users) {
-      await updateUserId(user.old, user.new, i);
+      if (checkDups) {
+        const userExists = await checkIfUserExists(user.new);
+        const userExistsOld = await checkIfUserExists(user.old);
+        if (userExists && userExistsOld) {
+          console.log(`User ${user.old} and ${user.new} exists.`);
+          continue;
+        }
+      } else {
+        await updateUserId(user.old, user.new, i);
+      }
       i++;
     }
   } catch (error) {
