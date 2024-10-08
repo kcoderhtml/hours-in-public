@@ -59,7 +59,7 @@ const eventDate = new Date("2024-10-03 17:00:00-05:00");
     console.log(
       `Users with data: ${usersWithData.length} (${
         Math.round((usersWithData.length / users.length) * 1000) / 10
-      }%)`
+      }% of all users)`
     );
 
     const usersSinceEventStart = users.filter(
@@ -69,7 +69,7 @@ const eventDate = new Date("2024-10-03 17:00:00-05:00");
     console.log(
       `Users since event start: ${usersSinceEventStart} (${
         Math.round((usersSinceEventStart / users.length) * 1000) / 10
-      }%)`
+      }% of all users)`
     );
 
     // users with data since event start
@@ -80,7 +80,7 @@ const eventDate = new Date("2024-10-03 17:00:00-05:00");
     console.log(
       `Users with data since event start: ${usersWithDataSinceEventStart} (${
         Math.round((usersWithDataSinceEventStart / users.length) * 1000) / 10
-      }%)`
+      }% of all users created since the event started)`
     );
 
     let totalTimeInCategories: { [key: string]: number } = {};
