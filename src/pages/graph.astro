@@ -20,8 +20,8 @@ const users: {
 await client.end();
 ---
 
-<Base noHeader={true}>
-  <section class="flex flex-col grow justify-center w-[60vw]">
+<Base>
+  <section class="flex flex-col grow justify-center w-[60vw] py-10">
     <span id="data" data-users={JSON.stringify(users)}></span>
 
     <p>User signups over time</p>
