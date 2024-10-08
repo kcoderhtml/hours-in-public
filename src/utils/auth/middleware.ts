@@ -7,7 +7,7 @@ import {
   gracePeriod,
 } from "./auth";
 
-const PUBLIC_ROUTES = ["/", "/favicon.ico"];
+const PUBLIC_ROUTES = ["/", "/favicon.ico", "/graph"];
 
 // `context` and `next` are automatically typed
 export const auth = defineMiddleware(async (context, next) => {
