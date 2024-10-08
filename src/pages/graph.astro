@@ -1,0 +1,128 @@
+---
+import Base from "../components/Base.astro";
+
+import pg from "pg";
+
+const { Client } = pg;
+
+const client = new Client(import.meta.env.DATABASE_URL);
+
+await client.connect();
+
+const users: {
+  id: string;
+  created_at: Date;
+  has_data: boolean;
+}[] = await client
+  .query("SELECT id, created_at, has_data FROM users")
+  .then((res) => res.rows);
+
+await client.end();
+---
+
+<Base noHeader={true}>
+  <section class="flex flex-col grow justify-center w-[60vw]">
+    <span id="data" data-users={JSON.stringify(users)}></span>
+
+    <p>User signups over time</p>
+
+    <div class="w-full"><canvas id="user_signups"></canvas></div>
+
+    <p>Total users over time</p>
+    <div class="w-full"><canvas id="total_users"></canvas></div>
+  </section>
+</Base>
+
+<script>
+  import Chart from "chart.js/auto";
+
+  const users: {
+    id: string;
+    created_at: Date;
+    has_data: boolean;
+  }[] = JSON.parse(document.getElementById("data")?.dataset.users!);
+
+  users.sort(
+    (a, b) =>
+      new Date(a.created_at).getTime() - new Date(b.created_at).getTime()
+  );
+
+  //   group the data by unique day
+  const dates = [];
+  let currentDate = new Date(users[0].created_at);
+
+  while (currentDate <= new Date(users[users.length - 1].created_at)) {
+    dates.push(currentDate.toDateString());
+
+    currentDate.setDate(currentDate.getDate() + 1);
+  }
+
+  //   count the number of users who have data for each day
+  const hasData = dates.map(
+    (date) =>
+      users.filter(
+        (row) =>
+          new Date(row.created_at).toDateString() === date && row.has_data
+      ).length
+  );
+
+  const noData = dates.map(
+    (date) =>
+      users.filter(
+        (row) =>
+          new Date(row.created_at).toDateString() === date && !row.has_data
+      ).length
+  );
+
+  //   for each day give the total amount of users signed up with data
+  const totalOverTimeWithData = dates.map(
+    (date) =>
+      users.filter(
+        (row) => new Date(row.created_at) <= new Date(date) && row.has_data
+      ).length
+  );
+
+  //   for each day give the total amount of users signed up without data
+  const totalOverTimeWithoutData = dates.map(
+    (date) =>
+      users.filter(
+        (row) => new Date(row.created_at) <= new Date(date) && !row.has_data
+      ).length
+  );
+
+  (async function () {
+    new Chart(document.getElementById("user_signups") as HTMLCanvasElement, {
+      type: "line",
+      data: {
+        labels: dates,
+        datasets: [
+          {
+            label: "Signups with Data",
+            data: hasData,
+          },
+          {
+            label: "Signups without Data",
+            data: noData,
+          },
+        ],
+      },
+    });
+
+    new Chart(document.getElementById("total_users") as HTMLCanvasElement, {
+      type: "line",
+      data: {
+        labels: dates,
+        datasets: [
+          {
+            label: "Total Users with Data",
+            data: totalOverTimeWithData,
+          },
+          {
+            label: "Total Users without Data",
+            data: totalOverTimeWithoutData,
+          },
+        ],
+      },
+    });
+  })();
+</script>
