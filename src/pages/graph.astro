@@ -1,28 +1,41 @@
 ---
+import { nullable } from "astro:schema";
 import Base from "../components/Base.astro";
 
 import pg from "pg";
 
 const { Client } = pg;
-
 const client = new Client(import.meta.env.DATABASE_URL);
 
-await client.connect();
-
-const users: {
+let users: {
   id: string;
   created_at: Date;
   has_data: boolean;
-}[] = await client
-  .query("SELECT id, created_at, has_data FROM users")
-  .then((res) => res.rows);
+}[] = [];
 
-await client.end();
+let error: string | null = null;
+
+try {
+  await client.connect();
+
+  users = await client
+    .query("SELECT id, created_at, has_data FROM users")
+    .then((res) => res.rows);
+} catch (e) {
+  if (e instanceof Error) {
+    console.log(e);
+    error = e.message;
+  }
+} finally {
+  await client.end();
+}
 ---
 
 <Base>
   <section class="flex flex-col grow justify-center w-[60vw] py-10">
     <span id="data" data-users={JSON.stringify(users)}></span>
+
+    {error && <p class="text-red-500 mt-10">Error: {error}</p>}
 
     <p>User signups over time</p>
 
